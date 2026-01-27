@@ -1,9 +1,9 @@
 langgraph
 langchain
 ipython
-langchain_google_genai
+langchain-openai
 langchain_community
-dotenv
-typing
+python-dotenv
 chromadb
 langchain_chroma
+pypdf

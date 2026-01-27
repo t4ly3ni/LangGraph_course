@@ -3,7 +3,8 @@ from dotenv import load_dotenv
 from langchain_core.messages import BaseMessage # The foundational class for all message types in LangGraph
 from langchain_core.messages import ToolMessage # Passes data back to LLM after it calls a tool such as the content and the tool_call_id
 from langchain_core.messages import SystemMessage # Message for providing instructions to the LLM
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
+import os
 from langchain_core.tools import tool
 from langgraph.graph.message import add_messages
 from langgraph.graph import StateGraph, END
@@ -41,7 +42,12 @@ def multiply(a: int, b: int):
 
 tools = [add, subtract, multiply]
 
-model = ChatGoogleGenerativeAI(model = "gemini-2.0-flash").bind_tools(tools)
+model = ChatOpenAI(
+    model="deepseek/deepseek-chat",
+    temperature=0,
+    openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+    openai_api_base="https://openrouter.ai/api/v1"
+).bind_tools(tools)
 
 
 def model_call(state:AgentState) -> AgentState:

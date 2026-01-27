@@ -105,12 +105,13 @@ uv pip install -r requirements.txt
 
 #### 7. (Optional) Set up Environment Variables
 
-If you need API keys (such as for OpenAI), create a `.env` file in the root directory:
+Create a `.env` file in the `Agents/` directory with your OpenRouter API key:
 
 ```zsh
-echo "OPENAI_API_KEY=your_openai_key" > .env
-# Add other variables as needed
+echo "OPENROUTER_API_KEY=your_openrouter_key" > Agents/.env
 ```
+
+**Note:** This project uses OpenRouter for LLM and embeddings. Get your free API key at [https://openrouter.ai/](https://openrouter.ai/)
 
 #### 8. Start JupyterLab
 
@@ -147,12 +148,17 @@ Core dependencies (see `requirements.txt` for full list):
 - langgraph
 - langchain
 - ipython
-- langchain_openai
+- langchain-openai (for OpenRouter integration)
 - langchain_community
-- dotenv
-- typing
+- python-dotenv
 - chromadb
 - langchain_chroma
+- pypdf
+
+**API Configuration:**
+- All agents use OpenRouter API for LLM (DeepSeek Chat) and embeddings
+- Very affordable: ~$0.14 per 1M tokens for LLM, ~$0.10 per 1M tokens for embeddings
+- Free credits available for new OpenRouter accounts
 
 Install all dependencies with:
 

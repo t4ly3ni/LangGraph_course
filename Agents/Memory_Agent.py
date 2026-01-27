@@ -1,7 +1,7 @@
 import os
 from typing import TypedDict, List, Union
 from langchain_core.messages import HumanMessage, AIMessage
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, START, END
 from dotenv import load_dotenv
 
@@ -10,7 +10,12 @@ load_dotenv()
 class AgentState(TypedDict):
     messages: List[Union[HumanMessage, AIMessage]]
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+llm = ChatOpenAI(
+    model="deepseek/deepseek-chat",
+    temperature=0,
+    openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+    openai_api_base="https://openrouter.ai/api/v1"
+)
 
 def process(state: AgentState) -> AgentState:
     """This node will solve the request you input"""

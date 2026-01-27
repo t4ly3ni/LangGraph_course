@@ -1,6 +1,7 @@
 from typing import TypedDict, List
 from langchain_core.messages import HumanMessage
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
+import os
 from langgraph.graph import StateGraph, START, END
 from dotenv import load_dotenv # used to store secret stuff like API keys or configuration values
 
@@ -9,7 +10,12 @@ load_dotenv()
 class AgentState(TypedDict):
     messages: List[HumanMessage]
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+llm = ChatOpenAI(
+    model="deepseek/deepseek-chat",
+    temperature=0,
+    openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+    openai_api_base="https://openrouter.ai/api/v1"
+)
 
 def process(state: AgentState) -> AgentState:
     response = llm.invoke(state["messages"])

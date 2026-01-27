@@ -1,7 +1,8 @@
 from typing import Annotated, Sequence, TypedDict
 from dotenv import load_dotenv  
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage, ToolMessage, SystemMessage
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
+import os
 from langchain_core.tools import tool
 from langgraph.graph.message import add_messages
 from langgraph.graph import StateGraph, END
@@ -50,7 +51,12 @@ def save(filename: str) -> str:
 
 tools = [update, save]
 
-model = ChatGoogleGenerativeAI(model="gemini-2.0-flash").bind_tools(tools)
+model = ChatOpenAI(
+    model="deepseek/deepseek-chat",
+    temperature=0,
+    openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+    openai_api_base="https://openrouter.ai/api/v1"
+).bind_tools(tools)
 
 def our_agent(state: AgentState) -> AgentState:
     system_prompt = SystemMessage(content=f"""

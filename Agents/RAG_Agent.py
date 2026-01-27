@@ -4,8 +4,8 @@ from langgraph.graph import StateGraph, END
 from typing import TypedDict, Annotated, Sequence
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage, ToolMessage
 from operator import add as add_messages
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_openai import ChatOpenAI
+from langchain_openai import OpenAIEmbeddings
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
@@ -13,12 +13,19 @@ from langchain_core.tools import tool
 
 load_dotenv()
 
-llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash", temperature = 0) # I want to minimize hallucination - temperature = 0 makes the model output more deterministic 
+# Using OpenRouter for LLM - Using a low-cost model
+llm = ChatOpenAI(
+    model="deepseek/deepseek-chat",  # Very cheap model ($0.14 per 1M tokens)
+    temperature=0,
+    openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+    openai_api_base="https://openrouter.ai/api/v1"
+)
 
-# Our Embedding Model - has to also be compatible with the LLM
-embeddings = GoogleGenerativeAIEmbeddings(
-    model="models/embedding-001",
+# Our Embedding Model - Using OpenRouter with text-embedding-3-small (free tier)
+embeddings = OpenAIEmbeddings(
+    model="openai/text-embedding-3-small",
+    openai_api_key=os.getenv("OPENROUTER_API_KEY"),
+    openai_api_base="https://openrouter.ai/api/v1",
 )
 
 
@@ -49,7 +56,7 @@ text_splitter = RecursiveCharacterTextSplitter(
 pages_split = text_splitter.split_documents(pages) # We now apply this to our pages
 
 persist_directory = r"C:\Vaibhav\LangGraph_Book\LangGraphCourse\Agents"
-collection_name = "stock_market"
+collection_name = "stock_market_openrouter"  # Changed to avoid dimension mismatch with old embeddings
 
 # If our collection does not exist in the directory, we create using the os command
 if not os.path.exists(persist_directory):
